@@ -5,14 +5,14 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objs as go
 import plotly.tools as tools
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 from dateutil.parser import parse
 import math
 
-#external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-#app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-app = dash.Dash(__name__)
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+#app = dash.Dash(__name__)
 
 df_fees = pd.read_csv('avg_transaction_fee.csv')
 df_times = pd.read_csv('block_times.csv')
@@ -47,7 +47,7 @@ def build_plots(height=700,width=1400,initial_date=None,end_date=None,zoom=False
     for i in cryptos:
         traces.append(go.Scatter({'x':df_times_series['date'],
                              'y':df_times_series[i],
-                             'text':i.upper(),
+                             #'text':i.upper(),
                              'name':i.upper(),
                              'legendgroup':i.upper(),
                              'xaxis':'x1',
@@ -56,7 +56,7 @@ def build_plots(height=700,width=1400,initial_date=None,end_date=None,zoom=False
                              'showlegend':False}))
         traces.append(go.Scatter({'x':[df_times_plot[i].mean()],
                              'y':[df_fees_plot[i].mean()],
-                             'text':i.upper(),
+                             #'text':i.upper(),
                              'name':i.upper(),
                              'legendgroup':i.upper(),
                              'mode':'markers',
@@ -66,7 +66,7 @@ def build_plots(height=700,width=1400,initial_date=None,end_date=None,zoom=False
                              'yaxis':'y2'}))
         traces.append(go.Scatter({'x':df_fees_series['date'],
                              'y':df_fees_series[i],
-                             'text':i.upper(),
+                             #'text':i.upper(),
                              'name':i.upper(),
                              'legendgroup':i.upper(),
                              'xaxis':'x1',
@@ -76,7 +76,7 @@ def build_plots(height=700,width=1400,initial_date=None,end_date=None,zoom=False
 
     layout = go.Layout(
         width=1400,
-        height=700,
+        height=600,
         xaxis=dict(
             domain=[0, 0.45],
             anchor='y1',
@@ -93,7 +93,7 @@ def build_plots(height=700,width=1400,initial_date=None,end_date=None,zoom=False
             title='Average Block Times in Minutes'
         ),
         yaxis2=dict(
-            #domain=[0, 1],
+            domain=[0, 1],
             anchor='x2',
             title='Average Transaction Fees in USD'
         ),
@@ -106,27 +106,43 @@ def build_plots(height=700,width=1400,initial_date=None,end_date=None,zoom=False
 
     return go.Figure(data=traces,layout=layout)
 
-app.layout = html.Div([
+app.layout = html.Div([dcc.Markdown('''
+#### Bitcoin Booms and Busts: Fast and Cheap Transactions Visualization
+
+The visualization below displays data on the premise of cryptocurrencies being able to perform fast and cheap transactions. On the left side,
+you can visualize time series on historical data for block times (the amount of time it takes for a transaction to show up on a block, thus
+being confirmed) and the fee charged for that transaction. On the right side, you can view a scatterplot where the positioning of each
+cryptocurrency is relative to the historical performance of that currency in both time and cost.
+
+- Drag in any time series to zoom in. The right panel will reflect just the period of time selected.
+- Double-click anywhere to undo the zoom and return to the original.
+- Click a cryptocurrency in the legend to remove its data from the plot.
+- Double-click a cryptocurrency in the legend to remove every other cryptocurrency and keep only the clicked one.
+'''),
         dcc.Graph(
             id='fastandcheap',
-            figure=build_plots()
+            figure=build_plots(),
+            config={
+                'displayModeBar': False
+            }
         )
-    ])
+    ]
+)
 
 @app.callback(
     Output('fastandcheap', 'figure'),
-    [Input('fastandcheap', 'relayoutData'),
-     Input('fastandcheap', 'selectedData')])
-def display_selected_data(relayoutData,selectedData):
-    print(relayoutData)
-    print(selectedData)
+    [Input('fastandcheap', 'relayoutData')])
+def display_selected_data(relayoutData):
     if (relayoutData is not None):
-        if (len(relayoutData) == 4):
+        if (len(relayoutData) == 4) and ('xaxis.range[0]' in relayoutData):
             initial_date = parse(relayoutData['xaxis.range[0]'])
             end_date = parse(relayoutData['xaxis.range[1]'])
             return build_plots(initial_date=initial_date,end_date=end_date,zoom=True)
-    # TODO: Selected data?
-    return build_plots()
+        if (('yaxis.autorange' in relayoutData) or ('xaxis.autorange' in relayoutData) or
+            ('yaxis2.autorange' in relayoutData) or ('xaxis2.autorange' in relayoutData) or
+            ('yaxis3.autorange' in relayoutData)):
+            return build_plots()
+    raise(dash.exceptions.PreventUpdate())
 
 if __name__ == '__main__':
     app.run_server(debug=True)
