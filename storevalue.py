@@ -18,6 +18,9 @@ app.layout = html.Div(children = [
     
     html.Div(children='''
         % Change in Prices by Day for Top 10 Cryptocurrencies by Market Cap (2013-2018)
+        
+        Hover over the data points to see more details.
+        You can click on the currency names on the legends to add/eliminate them from the graph.
     '''),
 
     # graph 1
