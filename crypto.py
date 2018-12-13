@@ -27,10 +27,8 @@ app = dash.Dash(__name__, static_folder='static')
 
 
 ####################################################
-### 		DESCENTRALIZED  CODE				 ###
+### 		DESCENTRALIZED VIZ CODE				 ###
 ####################################################
-
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 tm_width = 100
 tm_height = 100
@@ -40,8 +38,6 @@ tm_y = 0
 # color pallette for the viz
 cList = ['lightcyan', 'lightblue', 'deepskyblue', 'dodgerblue', 'steelblue',
          'midnightblue']
-
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 table = [['Name', 'Estimated Balance'],
          ['Planktons', '0 to 1 Bitcoin'],
@@ -159,6 +155,7 @@ def build_treemap(date, dataset, x, y, width, height):
 
     return figure
 
+<<<<<<< HEAD
 descetralizedStory = html.Div([
 
 html.Div([
@@ -197,6 +194,9 @@ time window and hover over the boxes to see the distribution.\n
 ])
 
 descetralizedviz = html.Div([
+=======
+decentralizedviz = html.Div([
+>>>>>>> 3297e63b67fe052784f9ec051a96d8c0f5ce59f8
 
 html.Div([
     html.H2(children='Are Bitcoins Decentralized?'),
@@ -251,6 +251,50 @@ html.Div([
 ], className='row', style= {'width': '90%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center'}),
 
 
+])
+
+####################################################
+### 			STORE VALUE VIZ CODE			 ###
+####################################################
+
+df_storevalue = pd.read_csv('crypto10-markets-am.csv')
+
+storevalueviz = html.Div(children = [
+    html.H1(children='How volatile are crypto prices?'),
+
+
+    html.Div(children='''
+        % Change in Prices by Day for Top 10 Cryptocurrencies by Market Cap (2013-2018)
+
+        Hover over the data points to see more details.
+        You can click on the currency names on the legends to add/eliminate them from the graph.
+    '''),
+
+    # graph 1
+    dcc.Graph(
+        id='change',
+        config = {
+            'displaylogo': False
+        },
+        figure={'data': [go.Scatter(
+            x = df_storevalue[df_storevalue['name'] == i].date,
+            y = df_storevalue[df_storevalue['name'] == i]['change%'],
+            name=i
+        )
+        for i in df_storevalue.name.unique()],
+
+
+                'layout': go.Layout(
+				paper_bgcolor='#f7f9fb',
+		    	plot_bgcolor='#f7f9fb',
+                xaxis={'type': 'date', 'title': 'Date'},
+                yaxis={'type': 'linear', 'title': '% Change in Day', 'tickformat': ',.000001%'},
+                margin={'l': 100, 'b': 40, 't': 10, 'r': 10},
+                legend={'x': 0, 'y': 1},
+                hovermode='closest')
+
+        }
+    )
 ])
 
 ####################################################
@@ -332,8 +376,16 @@ def build_plots(height=600,width=1400,initial_date=None,end_date=None,zoom=False
     range_x2 = max_time*1.1
 
     layout = go.Layout(
-        width=width,
-        height=height,
+        #width=width,
+        #height=height,
+		autosize=True,
+		margin=go.layout.Margin(
+	        l=50,
+	        r=10,
+	        b=40,
+	        t=20,
+	        pad=4
+    	),
         hovermode='closest',
         xaxis=dict(
             domain=[0, 0.45],
@@ -343,7 +395,7 @@ def build_plots(height=600,width=1400,initial_date=None,end_date=None,zoom=False
         yaxis=dict(
             domain=[0, 0.45],
             anchor='x1',
-            title='Average Transaction Fees in USD'
+            title='Avg. Transaction Fees (USD)'
         ),
         xaxis2=dict(
             domain=[0.55, 1],
@@ -360,7 +412,7 @@ def build_plots(height=600,width=1400,initial_date=None,end_date=None,zoom=False
         yaxis3=dict(
             domain=[0.55, 1],
             anchor='x1',
-            title='Average Block Times in Minutes'
+            title='Avg. Block Times (min)'
         ),
         images= [dict(
                   source= "/assets/fastcheap_back.png",
@@ -373,7 +425,9 @@ def build_plots(height=600,width=1400,initial_date=None,end_date=None,zoom=False
                   sizey=range_y2,
                   sizing= "fill",
                   opacity= 0.7,
-                  layer= "below")]
+                  layer= "below")],
+		paper_bgcolor='#f7f9fb',
+    	plot_bgcolor='#f7f9fb'
     )
 
     return go.Figure(data=traces,layout=layout)
@@ -387,159 +441,78 @@ The visualization below displays data on the premise of cryptocurrencies being a
 you can visualize time series on historical data for block times (the amount of time it takes for a transaction to show up on a block, thus
 being confirmed) and the fee charged for that transaction. On the right side, you can view a scatterplot where the positioning of each
 cryptocurrency is relative to the historical performance of that currency in both time and cost.
-
-- Drag in any time series to zoom in. The right panel will reflect just the period of time selected.
-- Double-click anywhere to undo the zoom and return to the original.
-- Click a cryptocurrency in the legend to remove its data from the plot.
-- Double-click a cryptocurrency in the legend to remove every other cryptocurrency and keep only the clicked one.
 '''),
-        html.Div([
-            html.Div([
-                html.Div([dcc.DatePickerRange(
-                    id='date_range_picker',
-                    display_format='MMM Do, YYYY',
-                    min_date_allowed=min_date,
-                    max_date_allowed=max_date,
-                    initial_visible_month=max_date,
-                    start_date=min_date,
-                    end_date=max_date
-                )],className='one-third.column')]
-            ,className='row',style={'columnCount':2}),
-            html.Div([
-                html.Div([dcc.Graph(
+        # html.Div([dcc.DatePickerRange(
+        #             id='date_range_picker',
+        #             display_format='MMM Do, YYYY',
+        #             min_date_allowed=min_date,
+        #             max_date_allowed=max_date,
+        #             initial_visible_month=max_date,
+        #             start_date=min_date,
+        #             end_date=max_date
+        #         ),
+        #         dcc.Graph(
+        #             id='fastandcheap',
+        #             figure=initial_figure,
+        #             config={
+        #                 'displayModeBar': False
+        #             }
+        #         ),
+		# 		dcc.Input(
+		# 			id='date',
+		# 			type='date',
+		# 			min=min_date,
+		# 			max=max_date,
+		# 			value=min_date
+		# 		)])
+		html.Div([html.Ul(className='flexblock',children=[
+					html.Li([
+						html.H6('Start Date'),
+						dcc.Input(
+		                    id='start_date_input',
+							type='date',
+		                    min=min_date,
+		                    max=max_date,
+							value=min_date
+	                	)
+					]),
+					html.Li([
+						html.H6('End Date'),
+						dcc.Input(
+				            id='end_date_input',
+							type='date',
+				            min=min_date,
+				            max=max_date,
+							value=max_date
+			        	)
+					])]
+				),
+                dcc.Graph(
                     id='fastandcheap',
                     figure=initial_figure,
                     config={
                         'displayModeBar': False
                     }
-                )],className='one.column')]
-            ,className='row'),
-            html.Div(id="relayoutDates")
-        ])
+                )
+			])
     ]
 )
-
-####################################################
-### 		STORE OF VALUE CODE				     ###
-####################################################
-
-df = pd.read_csv(
-    'crypto10-markets-am.csv')
-
-storevalue = html.Div(children = [
-    html.H1(children='How volatile are crypto prices?'),
-
-
-    html.Div(children='''
-        % Change in Prices by Day for Top 10 Cryptocurrencies by Market Cap (2013-2018)
-
-        Hover over the data points to see more details.
-        You can click on the currency names on the legends to add/eliminate them from the graph.
-    '''),
-
-    # graph 1
-    dcc.Graph(
-        id='change',
-        config = {
-            'displaylogo': False
-        },
-        figure={'data': [go.Scatter(
-            x = df[df['name'] == i].date,
-            y = df[df['name'] == i]['change%'],
-            name=i
-        )
-        for i in df.name.unique()],
-
-
-                'layout': go.Layout(
-                xaxis={'type': 'date', 'title': 'Date'},
-                yaxis={'type': 'linear', 'title': '% Change in Day', 'tickformat': ',.000001%'},
-                margin={'l': 100, 'b': 40, 't': 10, 'r': 10},
-                legend={'x': 0, 'y': 1},
-                hovermode='closest')
-
-        }
-        ),
-
-    # graph 2
-    #dcc.Graph(
-        #id='summary',
-        #config = {
-            #'displaylogo': False},
-        #figure={'data':
-                #[dict(type = 'scatter',
-                      #x = df['name'],
-                      #y = df['change%'],
-                      #mode = 'markers',
-                      #transforms = [dict(
-                      #    type = 'aggregate',
-                      #    groups = df['name'].unique(),
-                      #    aggregations = [dict(target = 'y', func = 'count', enabled = True),]
-                      #)]
-                     #)]
-
-               #}
-        #),
-])
-
-#if __name__ == '__main__':
-#    app.run_server(debug=True)
-
-
-####################################################
-### 		SETUP GENERAL HTML					 ###
-####################################################
-
-# Setup the HTML structure to be used by Dash
-# We set this up so that we can reliably use WebSlides
-# app.index_string = '''
-# <!doctype html>
-# <html>
-#   <head>
-#     <meta charset="utf-8">
-# 	{%metas%}
-# 	<title>{%title%}</title>
-#     <!-- Google Fonts -->
-#     <link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,700,700i%7CMaitree:200,300,400,600,700&subset=latin-ext" rel="stylesheet"/>
-#     <!-- CSS Colors -->
-#     <link rel="stylesheet" type='text/css' media='all' href="static/webslides-latest/static/css/webslides.css"/>
-#     <!-- Optional - CSS SVG Icons (Font Awesome) -->
-#     <link rel="stylesheet" type='text/css' media='all' href="static/webslides-latest/static/css/svg-icons.css"/>
-# 	{%favicon%}
-# 	{%css%}
-#   <body>
-#
-# 	{%app_entry%}
-#
-#     <script src="/static/webslides-latest/static/js/webslides.js"></script>
-#
-#     <!-- OPTIONAL - svg-icons.js (fontastic.me - Font Awesome as svg icons) -->
-#     <script defer src="/static/webslides-latest/static/js/svg-icons.js"></script>
-# 	<footer>
-# 		{%config%}
-# 		{%scripts%}
-# 	</footer>
-#   </body>
-#  </html>
-# '''
 
 ####################################################
 ### 			SLIDES NAVIGATION BAR			 ###
 ####################################################
 
 # Defines the Navigation Bar to placed in specific slides
-navbar = html.Header(className='bg-black',children=[
-			html.Div(className='wrap',children=[
-			  	html.Nav(role='navigation', className='navbar',children=[
-					html.Ul([
-							html.Li([html.A('Home',href='#slide=1')]),
-							html.Li([html.A('Instructions',href='')]),
-							html.Li([html.A('Story',href='')]),
-							html.Li([html.A('Marcelo',href='')]),
-							html.Li([html.A('Store Value',href='')]),
-							html.Li([html.A('Fast and Cheap',href='')])
-					])
-				])
+navbar = html.Header([
+			html.Nav(role='navigation', className='navbar',children=[
+				html.Ul([
+						html.Li([html.A('Home',href='#slide=1')]),
+						html.Li([html.A('Instructions',href='#slide-2')]),
+						html.Li([html.A('Story',href='#slide-3')]),
+						html.Li([html.A('Decentralization',href='')]),
+                        html.Li([html.A('Store Value',href='')]),
+						html.Li([html.A('Fast and Cheap',href='')])
+				],style={'margin':0})
 			])
 		])
 
@@ -565,62 +538,98 @@ slide1 = html.Section([
 				html.H6('Marcelo Queiroz')],
 		  className='bg-apple aligncenter')
 
-## SLIDE 2: General explanation slide
-slide2 = html.Section(html.Div([navbar,
-				html.Div([
-					html.H2('What is SVG?'),
-					html.P('Scalable Vector Graphics',className='text-subtitle'),
+## SLIDE 2: Instructions Slide
+slide2 = html.Section([navbar,
+				html.Div(className='wrap',children=[
+					html.H2('Instructions'),
+					html.P('How to use and navigate this website',className='text-subtitle'),
 					html.Hr(),
-					html.P('SVG is an XML-based vector graphic format used to display a wide range of graphics on the Web.',className='text-intro'),
-					html.P('SVG documents are just plain text files and can be created and edited in every text editor.',className='text-intro'),
-				],className='content-left'),
-				html.Div([
-					html.Img(src='traffic-lights.png')
-				],className='content-right')
-			],className='wrap')
-		)
+					html.Div(className='grid vertical-align',children=[
+						html.Div(className='column',children=[
+							html.H3('Story Mode'),
+							html.P('To view the story, just keep scrolling! You can return to the beginning of the story by using the navigation bar above.')
+						]),
+						html.Div(className='column',children=[
+							html.H3('Visualizations'),
+							html.P('You can jump directly to the specific visualizations you are insterested in at any time using the navigation bar.')
+						]),
+						html.Div(className='column',children=[
+							html.H3('Interact!'),
+							html.P('You can interact with all visualizations. Drag on them to zoom in, double-click to zoom-out. Hover over points for more details. Click on items in the legend to make them disappear, or double-click to single them out!')
+						])
+					])
+				])
+			])
 
-## SLIDE 3: Fast and cheap
-slide3 = html.Section(fastcheapviz)
+slide3 = html.Section([navbar,
+                        html.Div(className='wrap',children=[
+                            html.Div(className='card-50',children=[
+                                html.Div(className='flex-content',children=[
+                                    html.H3('Introduction'),
+                                    html.P(['Bitcoin is a ',html.Strong('cryptocurrency'),'''
+                                    , which is a form of electronic cash. It''s main differentiator is that is decentralized, meaning it does not
+                                    have a bank or any other kind of administrator behind it, with transactions occuring directly between users
+                                    in a peer-to-peer fashion and without intermediaries. It relies on miners to process the transactions, who
+                                    mine the distributed ledger called blockchain in exchange for bitcoins.
 
-## SLIDE 4: Store of Value
-slide4 = html.Section(storevalue)
+                                    Bitcoin''s main premises, which we'll analyze here, are:
+                                    ''']),
+                                    html.Ul(className='flexblock specs',children=[
+                                        html.Li(html.Div([
+                                            html.Img(src='/static/decentralized.svg'),
+                                            html.H2('Decentralized'),
+                                            'Lorem ipsum'
+                                        ])),
+                                        html.Li(html.Div([
+                                            html.Img(src='/static/storevalue.svg'),
+                                            html.H2('Store of Value'),
+                                            'Lorem ipsum'
+                                        ])),
+                                        html.Li(html.Div([
+                                            html.Img(src='/static/transactions.svg'),
+                                            html.H2('Fast and Cheap Transactions'),
+                                            'Lorem ipsum'
+                                        ]))
+                                    ])
+                                ]),
+                                html.Figure(html.Img(className='aligncenter',src='/static/bitcoin_pile.png',alt='Bitcoin'))
+                            ])
+                        ])
+                    ])
 
-## SLIDE 5: Descentralized
-slide5 = html.Section(descetralizedStory)
+# SLIDE 4: Decentralization Story
+slide4 = html.Section(className='bg-light',style={'background-color':'#edf2f7'},children=[navbar,
+            html.Div(className='wrap',children=[
+                html.Img(className='alignleft size-50',src='/static/wallets_count.svg'),
+                html.H2(html.Strong('Are Bitcoins Decentralized?')),
+                html.P(['Analyzing transaction data from ',html.A('January 2009 to september 2018',href='https://cloud.google.com/blog/products/gcp/bitcoin-in-bigquery-blockchain-analytics-on-public-data'),'.',
+                            html.Br(),html.Br(),
+                            'Bitcoins were supposed to be centralized, therefore not controlled by governments or companies. However, the early distribution was ',
+                            html.A('concentrated on a few early adopters', href='https://blog.picks.co/bitcoins-distribution-was-fair-e2ef7bbbc892/'),
+                            ' and nowadays specialists suspect that trader companies have the wealthier accounts.',
+                            html.Br(),html.Br(),
+                            'The problem can be even worse, because most of the wealthier users hold more than one account, improving his/her privacy at the same time that undermines the coin distribution transparency. For the 22 million unique wallets, the estimative is about roughly ',
+                            html.A('5 million unique users',href='https://medium.com/@BambouClub/are-you-in-the-bitcoin-1-a-new-model-of-the-distribution-of-bitcoin-wealth-6adb0d4a6a95'),'.'])
+                ])
+            ])
 
-## SLIDE 6: Descentralized Story
-slide6 = html.Section(descetralizedviz)
+# SLIDE 5: Decentralized
+slide94 = html.Section([navbar,decentralizedviz])
 
+## SLIDE 3: Store value
+slide95 = html.Section([navbar,storevalueviz])
 
-## TEST SLIDE
-slide_test = html.Section(html.Div(children=[
-    html.H1(children='Hello Dash'),
-
-    html.Div(children='''
-        Dash: A web application framework for Python.
-    '''),
-
-    dcc.Graph(
-        id='example-graph',
-        figure={
-            'data': [
-                {'x': [1, 2, 3], 'y': [4, 1, 2], 'type': 'bar', 'name': 'SF'},
-                {'x': [1, 2, 3], 'y': [2, 4, 5], 'type': 'bar', 'name': u'Montréal'},
-            ],
-            'layout': {
-                'title': 'Dash Data Visualization'
-            }
-        }
-    )
-]))
+## SLIDE 4: Fast and cheap
+slide96 = html.Section([navbar,fastcheapviz])
 
 slides.append(slide1)
 slides.append(slide2)
 slides.append(slide3)
 slides.append(slide4)
-slides.append(slide5)
-slides.append(slide6)
+# slides.append(slide5)
+slides.append(slide94)
+slides.append(slide95)
+slides.append(slide96)
 
 ####################################################
 ### 				DASH LAYOUT					 ###
@@ -681,40 +690,48 @@ def update_vpm_treemap(date):
 
 
 ################################
-## Fast and Cheap Callbacks
+## Fast and Cheap Callbacks   ##
 ################################
 
 @app.callback(
     Output('fastandcheap', 'figure'),
-    [Input('date_range_picker', 'start_date'),
-     Input('date_range_picker', 'end_date')])
+    [Input('start_date_input', 'value'),
+     Input('end_date_input', 'value')])
 def display_selected_data(start_date,end_date):
-    if ((start_date == str(min_date.date())) and (end_date == str(max_date.date()))):
-        return initial_figure
-    else:
-        return build_plots(initial_date=start_date,end_date=end_date,zoom=True)
+	if (start_date == ''):
+		start_date = min_date
+	else:
+		start_date = parse(start_date).date()
+	if (end_date == ''):
+		end_date = max_date
+	else:
+		end_date = parse(end_date).date()
+	if ((start_date == str(min_date.date())) and (end_date == str(max_date.date()))):
+		return initial_figure
+	else:
+		return build_plots(initial_date=start_date,end_date=end_date,zoom=True)
 
 @app.callback(
-    Output('date_range_picker', 'start_date'),
+    Output('start_date_input', 'value'),
     [Input('fastandcheap', 'relayoutData')])
 def zoom_to_start_date(relayoutData):
     if (relayoutData is None):
         return min_date
     if ('xaxis.range[0]' in relayoutData):
         initial_date = parse(relayoutData['xaxis.range[0]'])
-        return initial_date
+        return initial_date.date()
     else:
         return min_date
 
 @app.callback(
-    Output('date_range_picker', 'end_date'),
+    Output('end_date_input', 'value'),
     [Input('fastandcheap', 'relayoutData')])
 def zoom_to_end_date(relayoutData):
     if (relayoutData is None):
         return max_date
     if ('xaxis.range[1]' in relayoutData):
         end_date = parse(relayoutData['xaxis.range[1]'])
-        return end_date
+        return end_date.date()
     else:
         return max_date
 
