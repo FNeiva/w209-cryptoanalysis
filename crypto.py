@@ -1,14 +1,17 @@
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+import dash_table
 import pandas as pd
 import numpy as np
 import plotly.graph_objs as go
 import plotly.tools as tools
 from dash.dependencies import Input, Output, State
 from dateutil.parser import parse
+import squarify
 import math
 from datetime import datetime
+from bisect import bisect_left
 import grasia_dash_components as gdc
 
 ####################################################
@@ -21,6 +24,220 @@ import grasia_dash_components as gdc
 # Setup the Dash application
 #app = dash.Dash(__name__, external_stylesheets=external_stylesheets, static_folder='static')
 app = dash.Dash(__name__, static_folder='static')
+
+
+####################################################
+### 		DESCENTRALIZED  CODE				 ###
+####################################################
+
+tm_width = 100
+tm_height = 100
+tm_x = 0
+tm_y = 0
+
+# color pallette for the viz
+cList = ['lightcyan', 'lightblue', 'deepskyblue', 'dodgerblue', 'steelblue',
+         'midnightblue']
+
+table = [['Name', 'Estimated Balance'],
+         ['Planktons', '0 to 1 Bitcoin'],
+         ['Clowfishes', '1 to 10 Bitcoins'],
+         ['Lionfishes', '10 to 100 Bitcoins'],
+         ['Swordfishes', '100 to 1000 Bitcoins'],
+         ['Sharks', '1000 to 10000 Bitcoins'],
+         ['Whales', 'More than 10000 Bitcoins']]
+
+df_table = pd.DataFrame(table)
+df_table.columns = df_table.iloc[0]
+df_table = df_table[1:]
+
+df_val_per_month = pd.read_csv('change_bins_values_per_month.csv')
+df_val_per_month.fillna(0, inplace=True)
+df_val_per_month.loc[:,"_0_to_1":"More_10000"] = df_val_per_month.loc[:,"_0_to_1":"More_10000"].div(df_val_per_month.sum(axis=1), axis=0) * 100
+df_val_per_month.columns = ["Month", "Planktons", "Clownfishes",
+                            "Lionfishes", "Swordfishes", "Sharks", "Whales"]
+df_val_per_month = df_val_per_month.sort_values(by='Month')
+df_val_per_month.Month = pd.to_datetime(df_val_per_month.Month)
+df_val_per_month = df_val_per_month.set_index(['Month'])
+
+df_ct_per_month = pd.read_csv('change_count_bins_per_month.csv')
+df_ct_per_month.fillna(0, inplace=True)
+df_ct_per_month.loc[:,"_0_to_1":"More_10000"] = df_ct_per_month.loc[:,"_0_to_1":"More_10000"].div(df_ct_per_month.sum(axis=1), axis=0) * 100
+df_ct_per_month.columns = ["Month", "Planktons", "Clownfishes",
+                            "Lionfishes", "Swordfishes", "Sharks", "Whales"]
+df_ct_per_month = df_ct_per_month.sort_values(by='Month')
+df_ct_per_month.Month = pd.to_datetime(df_ct_per_month.Month)
+df_ct_per_month = df_ct_per_month.set_index(['Month'])
+
+epoch = datetime.utcfromtimestamp(0)
+
+
+def unix_time_millis(dt):
+    return (dt - epoch).total_seconds()
+
+def timestamp_millis(unix_ts):
+    ts = datetime.utcfromtimestamp(unix_ts).strftime('%Y-%m-%d')
+    return pd.to_datetime(ts)
+
+
+def build_treemap(date, dataset, x, y, width, height):
+
+    shapes = []
+    counter = 0
+    annotations = []
+
+    month = timestamp_millis(date)
+
+    if dataset == 'values':
+        values = df_val_per_month.loc[month]
+    else:
+        values = df_ct_per_month.loc[month]
+
+    cValues = [x + 0.0000001 for x in values]
+    normed = squarify.normalize_sizes(cValues, width, height)
+    rects = squarify.squarify(normed, x, y, width, height)
+
+    for r in rects:
+        shapes.append(
+            dict(
+                type='rect',
+                x0=r['x'],
+                y0=r['y'],
+                x1=r['x']+r['dx'],
+                y1=r['y']+r['dy'],
+                line={'width':2,
+                      'color':'#fff'},
+                fillcolor=cList[counter]
+            ),
+        )
+
+        counter = counter + 1
+        if counter >= len(cList):
+            counter = 0
+
+    figure = {
+        'data': [go.Scatter(
+            x=[r['x']+(r['dx']/2) for r in rects],
+            y=[r['y']+(r['dy']/2) for r in rects],
+            text=[v + '\n' + '{:.2f}'.format(values.get(v)) + '%' for v in values.keys()],
+            mode='text',
+            hoverinfo='text',
+            )
+        ],
+
+        'layout': go.Layout(
+            height=500,
+            width=500,
+            xaxis={'showgrid': False,
+                   'zeroline': False,
+                   'showticklabels': False,
+                   'ticks':''},
+            yaxis={'showgrid': False,
+                   'zeroline': False,
+                   'showticklabels': False,
+                   'ticks':''},
+            shapes=shapes,
+
+            hovermode='closest',
+            hoverdistance=200,
+        )
+    }
+
+    return figure
+
+descetralizedStory = html.Div([
+
+html.Div([
+    html.H2(children='Are Bitcoins Decentralized?'),
+    dcc.Markdown('Analyzing transaction data from [January 2009 to september 2018](https://cloud.google.com/blog/products/gcp/bitcoin-in-bigquery-blockchain-analytics-on-public-data).')
+], className='row'),
+
+html.Div([
+    html.Div([
+    dcc.Markdown('''
+Bitcoins were supposed to be centralized, therefore not controlled by governments
+or companies. However, the early distribution was [concentrated on a few early
+adopters](https://blog.picks.co/bitcoins-distribution-was-fair-e2ef7bbbc892/)
+and nowadays specialist suspects that trader companies have the wealthier
+accounts.
+
+The problem can be even worse, because most of the wealthier users hold more
+than one account, improving his/her privacy at the same time that undermines the
+coin distribution transparency. For the 22 million unique wallets, the estimative
+is about roughly [5 million unique users](https://medium.com/@BambouClub/are-you-in-the-bitcoin-1-a-new-model-of-the-distribution-of-bitcoin-wealth-6adb0d4a6a95).
+
+The upcoming boxes show the distribution of the users and the overall amount of
+transactions over time. Use the slider in the bottom of the page to shift the
+time window and hover over the boxes to see the distribution.\n
+
+    '''),
+        ], className='eight columns', style= {}),
+
+    html.Div([
+        html.Div([
+            html.Img(id='wallet_count_viz', src='/assets/wallets_count.svg'),
+        ]),
+    ], className='four columns'),
+
+], className='row'),
+])
+
+descetralizedviz = html.Div([
+
+html.Div([
+    html.H2(children='Are Bitcoins Decentralized?'),
+], className='row'),
+
+
+
+html.Div([
+    html.Div([], className='two columns'),
+    html.Div([
+        html.Div([
+                dcc.Graph(
+                    id='cpm_treemap',
+                    figure=build_treemap(unix_time_millis(df_ct_per_month.index[-1]),
+                                         'count', tm_x, tm_y, tm_width, tm_height),
+                    config={
+                        'displayModeBar': False
+                    }
+                )
+        ]),
+    ], className='five columns'),
+    html.Div([
+        html.Div([
+            dcc.Graph(
+                id='vpm_treemap',
+                figure=build_treemap(unix_time_millis(df_val_per_month.index[-1]),
+                                     'values', tm_x, tm_y, tm_width, tm_height),
+                config={
+                    'displayModeBar': False
+                }
+            )
+        ], style = {'width': '100%', 'display': 'block'}),
+    ], className='five columns'),
+],className='row'),
+
+html.Div([
+    html.Div([], className='one columns'),
+    html.Div([
+        dcc.Slider(
+            id='date_slider',
+            min=unix_time_millis(df_ct_per_month.index.min()),
+            max=unix_time_millis(df_ct_per_month.index.max()),
+            value=unix_time_millis(df_ct_per_month.index.max()),
+            marks={int(unix_time_millis(d)): {'label': d.strftime('%B %Y'),
+                                              'style': {  'transform': 'rotate(-45deg) translate(-45px, -10px)',
+                                                        'text-align': 'right',
+                                                        'white-space': 'nowrap'}} for d in df_ct_per_month.index[0:len(df_ct_per_month):5]},
+            included=True,
+            updatemode='mouseup'
+        )
+    ], className='ten columns'),
+], className='row', style= {'width': '90%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center'}),
+
+
+])
 
 ####################################################
 ### 			STORE VALUE VIZ CODE			 ###
@@ -353,6 +570,51 @@ app.layout = html.Div([html.Main(role='main',children=[
 ####################################################
 ### 			VISUALIZATION CALLBACKS			 ###
 ####################################################
+
+################################
+##  Descentralized Callbacks  ##
+################################
+
+@app.callback(
+     dash.dependencies.Output('vpm_treemap', 'figure'),
+     [dash.dependencies.Input('date_slider', 'value')])
+def update_vpm_treemap(date):
+    pos = bisect_left(unix_time_millis(df_val_per_month.index), date)
+    if pos == 0:
+        return build_treemap(unix_time_millis(df_val_per_month.index[0]),
+                             'values', tm_x, tm_y, tm_width, tm_height)
+    if pos == len(df_val_per_month.index):
+        return build_treemap(unix_time_millis(df_val_per_month.index[-1]),
+                             'values', tm_x, tm_y, tm_width, tm_height)
+    before = unix_time_millis(df_val_per_month.index[pos - 1])
+    after = unix_time_millis(df_val_per_month.index[pos])
+    if after - date < date - before:
+        return build_treemap(after,'values', tm_x, tm_y, tm_width, tm_height)
+    else:
+        return build_treemap(before,'values', tm_x, tm_y, tm_width, tm_height)
+
+
+@app.callback(
+     dash.dependencies.Output('cpm_treemap', 'figure'),
+     [dash.dependencies.Input('date_slider', 'value')])
+def update_vpm_treemap(date):
+    cDate = timestamp_millis(date)
+    pos = bisect_left(df_ct_per_month.index, cDate)
+    if pos == 0:
+        return build_treemap(df_ct_per_month.index[0],
+                             'count', tm_x, tm_y, tm_width, tm_height)
+    if pos == len(df_ct_per_month.index):
+        return build_treemap(df_ct_per_month.index[-1],
+                             'count', tm_x, tm_y, tm_width, tm_height)
+    before = df_ct_per_month.index[pos - 1]
+    after = df_ct_per_month.index[pos]
+    if after - cDate < cDate - before:
+        return build_treemap(unix_time_millis(after),'count', tm_x,
+                             tm_y, tm_width, tm_height)
+    else:
+        return build_treemap(unix_time_millis(before),'count', tm_x,
+                             tm_y, tm_width, tm_height)
+
 
 ################################
 ## Fast and Cheap Callbacks
