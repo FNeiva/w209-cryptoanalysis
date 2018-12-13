@@ -543,7 +543,9 @@ slide6 = html.Section(className='fullscreen bg-apple',children=[navbar,
             html.Span(className='background dark',style={'background-image':'url("/static/valueback.jpg")'}),
             html.Div(className='wrap aligncenter',children=[
                 html.H2(html.Strong('Are cryptocurrencies a good store of value?')),
-                html.P(['''A key premise of any currency is that they can store value over time. A good store of value gives you somewhat stable
+                html.Hr(),
+                html.P(html.Strong(
+                       ['''A key premise of any currency is that they can store value over time. A good store of value gives you somewhat stable
                            purchasing power. U.S. dollars and gold are widely adopted as currency and store of value largely because of that --
                            the purchasing power of dollars or gold today are expected to be predictive of what they will be a day or a year from
                            now.''',html.Br(),html.Br(),
@@ -560,7 +562,7 @@ slide6 = html.Section(className='fullscreen bg-apple',children=[navbar,
                         '''For a more stark comparison, consider that the total value of crypto currencies went from $10B in May 2016 to $100B
                            in June 2017 to $800B in January 2018. And it now back to just over $100B in December 2018.''',html.Br(),html.Br(),
                         '''If we focus only on the top 10 largest currencies, their volatility in prices is noticeable, with Ripple having the
-                           highest daily upswing in prices of 178.8% (April 2017) and Ethereum having the biggest daily drop of 73% (April 15).'''])
+                           highest daily upswing in prices of 178.8% (April 2017) and Ethereum having the biggest daily drop of 73% (April 15).''']))
         ])
     ])
 
