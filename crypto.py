@@ -429,7 +429,8 @@ navbar = html.Header([
 						html.Li([html.A('Story',href='#slide=3')]),
 						html.Li([html.A('Decentralization',href='#slide=5')]),
                         html.Li([html.A('Store Value',href='#slide=7')]),
-						html.Li([html.A('Fast and Cheap',href='#slide=9')])
+						html.Li([html.A('Fast and Cheap',href='#slide=9')]),
+                        html.Li([html.A('About',href='#slide=11')])
 				],style={'margin':0})
 			])
 		])
@@ -598,25 +599,43 @@ slide9 = html.Section([navbar,fastcheapviz])
 ## SLIDE 10: Story Conclusion
 slide10 = html.Section(className='bg-apple',children=[navbar,
             html.Div(className='wrap',children=[
-                html.Img(className='alignright size-40',src='/static/speedcost.svg'),
-                html.H2(html.Strong('Fast and Cheap Transactions. Really?')),
-                html.P(['One of the premises of Bitcoin is to perform transactions quickly and with small fees. But how do those work',
-                        ' in cryptocurrencies?',
-                        ' All transactions are stored in a transaction ledger, called ',html.Strong('blockchain'),'.',
-                        ' Cryptocurrency miners mine the blockchain for transactions, and when they do so they create new blocks confirming ',
-                        'those transactions. Therefore, the time to confirm a transaction is usually the cryptocurrency\'s ',html.Strong('block time'),
-                        '. When the miner mines a transaction, he also takes some currency for himself, which is the ',html.Strong('transaction fee'),'.',
-                        html.Br(),html.Br(),
-                        'When analyzing historical Bitcoin data, we can see that it has in fact been serving fast and cheap transactions, ',
-                        'at least when compared to traditional banks transfers, but not credit cards and other services such as PayPal, with ',
-                        'transactions being confirmed on average in 10 minutes. Fees are much lower, though, with the average historical fee ',
-                        'around only a single dollar. When compared to other cryptocurrencies, though, Bitcoin suffers, offering the most ',
-                        'expensive and slowest transactions of all the major cryptocurrencies. Also, when a boom in cryptocurrencies started ',
-                        'occuring in the end in 2017 fees went sky high to an average of 54 dollars, showing that the currency is also very volatile.',
-                        html.Br(),html.Br(),
-                        'You can explore those insights and compare cryptocurrencies\' historical behavior on this premise in our next visualization.'])
+                html.H2(html.Strong('Conclusions')),
+                html.P('In summary, after looking at the data across the three key dimensions we reiterate below, we have some preliminary conclusions -- some pertinent only to Bitcoin, some to more currencies:'),
+                html.Ul(className='flexblock border',children=[
+                    html.Li([
+                        html.H2('Decentralized'),
+                        'Bitcoin is relatively decentralized, though it seems to be getting more concentrated in the hand of few users in most recent months'
+                    ]),
+                    html.Li([
+                        html.H2('Store of Value'),
+                        'Cryptocurrency prices are very volatile, with even top 10 cryptos swinging in price more than 100% in a given day. While they might be reasonably good speculative assets, their price instability make them a difficult store of value. This is exemplified by the fact that of crypto currencies went from $10B in May 2016 to $100B in June 2017 to $800B in January 2018. And it now back to just over $100B in December 2018.'
+                    ]),
+                    html.Li([
+                        html.H2('Fast and Cheap Transactions'),
+                        'Cryptocurrencies have been fulfilling their promises of serving fast and cheap transactions, at least when compared to traditional banks transfers, but not credit cards and other services such as PayPal, but with much lower fees.'
+                    ])
+                ]),
+                html.P('The reality is, it is very hard to evaluate how cryptocurrencies perform along the three dimensions we analyzed. They are still relatively new, with Bitcoin, the oldest cryptocurrency, being less than a decade old. While their value has been recently tanking since the peak value of $800B in December 2017, it’s hard to predict where they could go from here.')
         ])
     ])
+
+## SLIDE 11: About
+slide11 = html.Section(className='bg-apple',children=[navbar,
+            html.Div(className='wrap aligncenter',children=[
+                html.H2(html.Strong('About The Project')),
+                html.P(['This visualization was created in the Fall 2018 term for UC Berkeley Data Science course: W209 Data Visualization. The data is from three main sources:'
+                        ' ',html.A('cryptocurrency data from Kaggle',href='https://www.kaggle.com/jessevent/all-crypto-currencies'),', Bitcoin blockchain transaction records from ',
+                        html.A('Google BigQuery',href='https://bigquery.cloud.google.com/dataset/bigquery-public-data:bitcoin_blockchain?pli=1'),
+                        ' and data scrapped from ',html.A('BitInfoCharts.com',href='http://bitinfocharts.com'),'.'])
+                ]),
+                html.Div(className='wrap',children=[
+                    html.Ul(className='flexblock gallery',children=[
+                        html.Li(html.A(html.Figure([html.Img(src='/static/arnobio.jpeg'),html.Figcaption([html.H2('Arnobio Morelix'),'Startup Genome'])]),href='https://www.linkedin.com/in/arnobiomorelix/')),
+                        html.Li(html.A(html.Figure([html.Img(src='/static/felipe.jpg'),html.Figcaption([html.H2('Felipe Campos'),'IBM'])]),href='https://www.linkedin.com/in/fneiva/')),
+                        html.Li(html.A(html.Figure([html.Img(src='/static/marcelo.jpeg'),html.Figcaption([html.H2('Marcelo Queiroz'),'ANDRITZ'])]),href='https://www.linkedin.com/in/marcelo-scatolin-queiroz-387a7020/'))
+                    ])
+                ]),
+        ])
 
 slides.append(slide1)
 slides.append(slide2)
@@ -628,6 +647,7 @@ slides.append(slide7)
 slides.append(slide8)
 slides.append(slide9)
 slides.append(slide10)
+slides.append(slide11)
 
 ####################################################
 ### 				DASH LAYOUT					 ###
