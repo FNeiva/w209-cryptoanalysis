@@ -80,7 +80,7 @@ def timestamp_millis(unix_ts):
     return pd.to_datetime(ts)
 
 
-def build_treemap(date, dataset, x, y, width, height):
+def build_treemap(date, dataset, x, y, width, height, title):
 
     shapes = []
     counter = 0
@@ -138,6 +138,7 @@ def build_treemap(date, dataset, x, y, width, height):
         'layout': go.Layout(
             #height=440,
             #width=420,
+            title=title,
             xaxis={'showgrid': False,
                    'zeroline': False,
                    'showticklabels': False,
@@ -149,7 +150,7 @@ def build_treemap(date, dataset, x, y, width, height):
             shapes=shapes,
             paper_bgcolor='#f7f9fb',
             plot_bgcolor='#f7f9fb',
-            margin={'l': 10, 'b': 10, 't': 10, 'r': 10},
+            margin={'l': 10, 'b': 10, 't': 30, 'r': 10},
             hovermode='closest',
             hoverdistance=200,
         )
@@ -165,7 +166,7 @@ decentralizedviz = html.Div(className='wrap',children=[
                                 dcc.Graph(
                                     id='cpm_treemap',
                                     figure=build_treemap(unix_time_millis(df_ct_per_month.index[-1]),
-                                                         'count', tm_x, tm_y, tm_width, tm_height),
+                                                         'count', tm_x, tm_y, tm_width, tm_height,'% of Total Changes'),
                                     config={
                                         'displayModeBar': False
                                     }
@@ -175,7 +176,7 @@ decentralizedviz = html.Div(className='wrap',children=[
                                 dcc.Graph(
                                     id='vpm_treemap',
                                     figure=build_treemap(unix_time_millis(df_val_per_month.index[-1]),
-                                                         'values', tm_x, tm_y, tm_width, tm_height),
+                                                         'values', tm_x, tm_y, tm_width, tm_height, '% of Total Volume'),
                                     config={
                                         'displayModeBar': False
                                     }
@@ -453,9 +454,9 @@ navbar = html.Header([
 						html.Li([html.A('Home',href='#slide=1')]),
 						html.Li([html.A('Instructions',href='#slide-2')]),
 						html.Li([html.A('Story',href='#slide-3')]),
-						html.Li([html.A('Decentralization',href='')]),
-                        html.Li([html.A('Store Value',href='')]),
-						html.Li([html.A('Fast and Cheap',href='')])
+						html.Li([html.A('Decentralization',href='#slide-5')]),
+                        html.Li([html.A('Store Value',href='#slide-7')]),
+						html.Li([html.A('Fast and Cheap',href='#slide-9')])
 				],style={'margin':0})
 			])
 		])
@@ -505,6 +506,7 @@ slide2 = html.Section([navbar,
 				])
 			])
 
+## SLIDE3: Story Introduction
 slide3 = html.Section([navbar,
                         html.Div(className='wrap',children=[
                             html.Div(className='card-20',children=[
@@ -543,7 +545,7 @@ slide3 = html.Section([navbar,
                         ])
                     ])
 
-# SLIDE 4: Decentralization Story
+## SLIDE 4: Decentralization Story
 slide4 = html.Section(className='bg-light',style={'background-color':'#edf2f7'},children=[navbar,
             html.Div(className='wrap',children=[
                 html.Img(className='alignleft size-50',src='/static/wallets_count.svg'),
@@ -559,8 +561,8 @@ slide4 = html.Section(className='bg-light',style={'background-color':'#edf2f7'},
                 ])
             ])
 
-# SLIDE 5: Decentralized
-slide94 = html.Section([navbar,decentralizedviz])
+## SLIDE 5: Decentralized Visualization
+slide5 = html.Section([navbar,decentralizedviz])
 
 ## SLIDE 3: Store value
 slide95 = html.Section([navbar,storevalueviz])
@@ -572,8 +574,7 @@ slides.append(slide1)
 slides.append(slide2)
 slides.append(slide3)
 slides.append(slide4)
-# slides.append(slide5)
-slides.append(slide94)
+slides.append(slide5)
 slides.append(slide95)
 slides.append(slide96)
 
@@ -601,16 +602,16 @@ def update_vpm_treemap(date):
     pos = bisect_left(unix_time_millis(df_val_per_month.index), date)
     if pos == 0:
         return build_treemap(unix_time_millis(df_val_per_month.index[0]),
-                             'values', tm_x, tm_y, tm_width, tm_height)
+                             'values', tm_x, tm_y, tm_width, tm_height,'% of Total Volume')
     if pos == len(df_val_per_month.index):
         return build_treemap(unix_time_millis(df_val_per_month.index[-1]),
-                             'values', tm_x, tm_y, tm_width, tm_height)
+                             'values', tm_x, tm_y, tm_width, tm_height,'% of Total Volume')
     before = unix_time_millis(df_val_per_month.index[pos - 1])
     after = unix_time_millis(df_val_per_month.index[pos])
     if after - date < date - before:
-        return build_treemap(after,'values', tm_x, tm_y, tm_width, tm_height)
+        return build_treemap(after,'values', tm_x, tm_y, tm_width, tm_height,'% of Total Volume')
     else:
-        return build_treemap(before,'values', tm_x, tm_y, tm_width, tm_height)
+        return build_treemap(before,'values', tm_x, tm_y, tm_width, tm_height,'% of Total Volume')
 
 
 @app.callback(
@@ -621,18 +622,18 @@ def update_vpm_treemap(date):
     pos = bisect_left(df_ct_per_month.index, cDate)
     if pos == 0:
         return build_treemap(df_ct_per_month.index[0],
-                             'count', tm_x, tm_y, tm_width, tm_height)
+                             'count', tm_x, tm_y, tm_width, tm_height,'% of Total Changes')
     if pos == len(df_ct_per_month.index):
         return build_treemap(df_ct_per_month.index[-1],
-                             'count', tm_x, tm_y, tm_width, tm_height)
+                             'count', tm_x, tm_y, tm_width, tm_height,'% of Total Changes')
     before = df_ct_per_month.index[pos - 1]
     after = df_ct_per_month.index[pos]
     if after - cDate < cDate - before:
         return build_treemap(unix_time_millis(after),'count', tm_x,
-                             tm_y, tm_width, tm_height)
+                             tm_y, tm_width, tm_height,'% of Total Changes')
     else:
         return build_treemap(unix_time_millis(before),'count', tm_x,
-                             tm_y, tm_width, tm_height)
+                             tm_y, tm_width, tm_height,'% of Total Changes')
 
 
 ################################
