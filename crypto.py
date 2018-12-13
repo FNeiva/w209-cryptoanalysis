@@ -167,7 +167,7 @@ decentralizedviz = html.Div(className='wrap',children=[
                                 dcc.Graph(
                                     id='cpm_treemap',
                                     figure=build_treemap(unix_time_millis(df_ct_per_month.index[-1]),
-                                                         'count', tm_x, tm_y, tm_width, tm_height,'% of Total Changes'),
+                                                         'count', tm_x, tm_y, tm_width, tm_height,'% of Total Users'),
                                     config={
                                         'displayModeBar': False
                                     }
@@ -206,9 +206,7 @@ decentralizedviz = html.Div(className='wrap',children=[
 df_storevalue = pd.read_csv('crypto10-markets-am.csv')
 
 storevalueviz = html.Div(children = [
-    html.H1(children='How volatile are crypto prices?'),
-
-
+    html.H2('How volatile are crypto prices?'),
     html.Div(children='''
         % Change in Prices by Day for Top 10 Cryptocurrencies by Market Cap (2013-2018)
 
@@ -673,18 +671,18 @@ def update_vpm_treemap(date):
     pos = bisect_left(df_ct_per_month.index, cDate)
     if pos == 0:
         return build_treemap(df_ct_per_month.index[0],
-                             'count', tm_x, tm_y, tm_width, tm_height,'% of Total Changes')
+                             'count', tm_x, tm_y, tm_width, tm_height,'% of Total Users')
     if pos == len(df_ct_per_month.index):
         return build_treemap(df_ct_per_month.index[-1],
-                             'count', tm_x, tm_y, tm_width, tm_height,'% of Total Changes')
+                             'count', tm_x, tm_y, tm_width, tm_height,'% of Total Users')
     before = df_ct_per_month.index[pos - 1]
     after = df_ct_per_month.index[pos]
     if after - cDate < cDate - before:
         return build_treemap(unix_time_millis(after),'count', tm_x,
-                             tm_y, tm_width, tm_height,'% of Total Changes')
+                             tm_y, tm_width, tm_height,'% of Total Users')
     else:
         return build_treemap(unix_time_millis(before),'count', tm_x,
-                             tm_y, tm_width, tm_height,'% of Total Changes')
+                             tm_y, tm_width, tm_height,'% of Total Users')
 
 
 ################################
