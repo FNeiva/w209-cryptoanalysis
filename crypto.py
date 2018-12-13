@@ -136,8 +136,8 @@ def build_treemap(date, dataset, x, y, width, height):
         ],
 
         'layout': go.Layout(
-            height=440,
-            width=420,
+            #height=440,
+            #width=420,
             xaxis={'showgrid': False,
                    'zeroline': False,
                    'showticklabels': False,
@@ -147,7 +147,9 @@ def build_treemap(date, dataset, x, y, width, height):
                    'showticklabels': False,
                    'ticks':''},
             shapes=shapes,
-
+            paper_bgcolor='#f7f9fb',
+            plot_bgcolor='#f7f9fb',
+            margin={'l': 10, 'b': 10, 't': 10, 'r': 10},
             hovermode='closest',
             hoverdistance=200,
         )
@@ -157,7 +159,7 @@ def build_treemap(date, dataset, x, y, width, height):
 
 decentralizedviz = html.Div(className='wrap',children=[
                         html.H2('Are Bitcoins Decentralized?'),
-                        html.Hr(),
+                        html.P('By dragging the slider, we can see how Bitcoin is evolving towards more centralization.',className='text-intro'),
                         html.Div(className='grid',children=[
                             html.Div(className='column',children=[
                                 dcc.Graph(
