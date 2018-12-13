@@ -379,69 +379,43 @@ def build_plots(height=600,width=1400,initial_date=None,end_date=None,zoom=False
 
 initial_figure = build_plots()
 
-fastcheapviz = html.Div([dcc.Markdown('''
-#### Bitcoin Booms and Busts: Fast and Cheap Transactions Visualization
-
-The visualization below displays data on the premise of cryptocurrencies being able to perform fast and cheap transactions. On the left side,
-you can visualize time series on historical data for block times (the amount of time it takes for a transaction to show up on a block, thus
-being confirmed) and the fee charged for that transaction. On the right side, you can view a scatterplot where the positioning of each
-cryptocurrency is relative to the historical performance of that currency in both time and cost.
-'''),
-        # html.Div([dcc.DatePickerRange(
-        #             id='date_range_picker',
-        #             display_format='MMM Do, YYYY',
-        #             min_date_allowed=min_date,
-        #             max_date_allowed=max_date,
-        #             initial_visible_month=max_date,
-        #             start_date=min_date,
-        #             end_date=max_date
-        #         ),
-        #         dcc.Graph(
-        #             id='fastandcheap',
-        #             figure=initial_figure,
-        #             config={
-        #                 'displayModeBar': False
-        #             }
-        #         ),
-		# 		dcc.Input(
-		# 			id='date',
-		# 			type='date',
-		# 			min=min_date,
-		# 			max=max_date,
-		# 			value=min_date
-		# 		)])
-		html.Div([html.Ul(className='flexblock',children=[
-					html.Li([
-						html.H6('Start Date'),
-						dcc.Input(
-		                    id='start_date_input',
-							type='date',
-		                    min=min_date,
-		                    max=max_date,
-							value=min_date
-	                	)
-					]),
-					html.Li([
-						html.H6('End Date'),
-						dcc.Input(
-				            id='end_date_input',
-							type='date',
-				            min=min_date,
-				            max=max_date,
-							value=max_date
-			        	)
-					])]
-				),
-                dcc.Graph(
-                    id='fastandcheap',
-                    figure=initial_figure,
-                    config={
-                        'displayModeBar': False
-                    }
-                )
-			])
-    ]
-)
+fastcheapviz = html.Div(className='wrap',children=[
+                        html.H2('Fast and Cheap Transactions'),
+                        html.P('''On the left side, you can visualize time series on historical data for block times (the amount of time it takes for a
+                        transaction to show up on a block, thus being confirmed) and the fee charged for that transaction. On the right side, the
+                        positioning of each cryptocurrency is relative to it\'s historical performance in both time and cost.'''),
+                        html.Div(className='aligncenter',children=[
+                            html.Ul(className='flexblock',children=[
+            					html.Li([
+            						html.H6('Start Date'),
+            						dcc.Input(
+            		                    id='start_date_input',
+            							type='date',
+            		                    min=min_date,
+            		                    max=max_date,
+            							value=min_date
+            	                	)
+            					],style={'padding-top':'1rem','padding-bottom':'1rem'}),
+            					html.Li([
+            						html.H6('End Date'),
+            						dcc.Input(
+            				            id='end_date_input',
+            							type='date',
+            				            min=min_date,
+            				            max=max_date,
+            							value=max_date
+            			        	)
+            					],style={'padding-top':'1rem','padding-bottom':'1rem'})]
+            				),
+                            dcc.Graph(
+                                id='fastandcheap',
+                                figure=initial_figure,
+                                config={
+                                    'displayModeBar': False
+                                }
+                            )
+        			  ])
+                ])
 
 ####################################################
 ### 			SLIDES NAVIGATION BAR			 ###
@@ -452,11 +426,11 @@ navbar = html.Header([
 			html.Nav(role='navigation', className='navbar',children=[
 				html.Ul([
 						html.Li([html.A('Home',href='#slide=1')]),
-						html.Li([html.A('Instructions',href='#slide-2')]),
-						html.Li([html.A('Story',href='#slide-3')]),
-						html.Li([html.A('Decentralization',href='#slide-5')]),
-                        html.Li([html.A('Store Value',href='#slide-7')]),
-						html.Li([html.A('Fast and Cheap',href='#slide-9')])
+						html.Li([html.A('Instructions',href='#slide=2')]),
+						html.Li([html.A('Story',href='#slide=3')]),
+						html.Li([html.A('Decentralization',href='#slide=5')]),
+                        html.Li([html.A('Store Value',href='#slide=7')]),
+						html.Li([html.A('Fast and Cheap',href='#slide=9')])
 				],style={'margin':0})
 			])
 		])
@@ -564,19 +538,91 @@ slide4 = html.Section(className='bg-light',style={'background-color':'#edf2f7'},
 ## SLIDE 5: Decentralized Visualization
 slide5 = html.Section([navbar,decentralizedviz])
 
-## SLIDE 3: Store value
-slide95 = html.Section([navbar,storevalueviz])
+## SLIDE 6: Store Value Story
+slide6 = html.Section(className='bg-apple',children=[navbar,
+            html.Div(className='wrap',children=[
+                html.Img(className='alignright size-40',src='/static/speedcost.svg'),
+                html.H2(html.Strong('Fast and Cheap Transactions. Really?')),
+                html.P(['One of the premises of Bitcoin is to perform transactions quickly and with small fees. But how do those work',
+                        ' in cryptocurrencies?',
+                        ' All transactions are stored in a transaction ledger, called ',html.Strong('blockchain'),'.',
+                        ' Cryptocurrency miners mine the blockchain for transactions, and when they do so they create new blocks confirming ',
+                        'those transactions. Therefore, the time to confirm a transaction is usually the cryptocurrency\'s ',html.Strong('block time'),
+                        '. When the miner mines a transaction, he also takes some currency for himself, which is the ',html.Strong('transaction fee'),'.',
+                        html.Br(),html.Br(),
+                        'When analyzing historical Bitcoin data, we can see that it has in fact been serving fast and cheap transactions, ',
+                        'at least when compared to traditional banks transfers, but not credit cards and other services such as PayPal, with ',
+                        'transactions being confirmed on average in 10 minutes. Fees are much lower, though, with the average historical fee ',
+                        'around only a single dollar. When compared to other cryptocurrencies, though, Bitcoin suffers, offering the most ',
+                        'expensive and slowest transactions of all the major cryptocurrencies. Also, when a boom in cryptocurrencies started ',
+                        'occuring in the end in 2017 fees went sky high to an average of 54 dollars, showing that the currency is also very volatile.',
+                        html.Br(),html.Br(),
+                        'You can explore those insights and compare cryptocurrencies\' historical behavior on this premise in our next visualization.'])
+        ])
+    ])
 
-## SLIDE 4: Fast and cheap
-slide96 = html.Section([navbar,fastcheapviz])
+## SLIDE 7: Store value Visualization
+slide7 = html.Section([navbar,storevalueviz])
+
+## SLIDE 8: Fast and Cheap Story
+slide8 = html.Section(className='bg-apple',children=[navbar,
+            html.Div(className='wrap',children=[
+                html.Img(className='alignright size-40',src='/static/speedcost.svg'),
+                html.H2(html.Strong('Fast and Cheap Transactions. Really?')),
+                html.P(['One of the premises of Bitcoin is to perform transactions quickly and with small fees. But how do those work',
+                        ' in cryptocurrencies?',
+                        ' All transactions are stored in a transaction ledger, called ',html.Strong('blockchain'),'.',
+                        ' Cryptocurrency miners mine the blockchain for transactions, and when they do so they create new blocks confirming ',
+                        'those transactions. Therefore, the time to confirm a transaction is usually the cryptocurrency\'s ',html.Strong('block time'),
+                        '. When the miner mines a transaction, he also takes some currency for himself, which is the ',html.Strong('transaction fee'),'.',
+                        html.Br(),html.Br(),
+                        'When analyzing historical Bitcoin data, we can see that it has in fact been serving fast and cheap transactions, ',
+                        'at least when compared to traditional banks transfers, but not credit cards and other services such as PayPal, with ',
+                        'transactions being confirmed on average in 10 minutes. Fees are much lower, though, with the average historical fee ',
+                        'around only a single dollar. When compared to other cryptocurrencies, though, Bitcoin suffers, offering the most ',
+                        'expensive and slowest transactions of all the major cryptocurrencies. Also, when a boom in cryptocurrencies started ',
+                        'occuring in the end in 2017 fees went sky high to an average of 54 dollars, showing that the currency is also very volatile.',
+                        html.Br(),html.Br(),
+                        'You can explore those insights and compare cryptocurrencies\' historical behavior on this premise in our next visualization.'])
+        ])
+    ])
+
+## SLIDE 9: Fast and cheap Visualization
+slide9 = html.Section([navbar,fastcheapviz])
+
+## SLIDE 10: Story Conclusion
+slide10 = html.Section(className='bg-apple',children=[navbar,
+            html.Div(className='wrap',children=[
+                html.Img(className='alignright size-40',src='/static/speedcost.svg'),
+                html.H2(html.Strong('Fast and Cheap Transactions. Really?')),
+                html.P(['One of the premises of Bitcoin is to perform transactions quickly and with small fees. But how do those work',
+                        ' in cryptocurrencies?',
+                        ' All transactions are stored in a transaction ledger, called ',html.Strong('blockchain'),'.',
+                        ' Cryptocurrency miners mine the blockchain for transactions, and when they do so they create new blocks confirming ',
+                        'those transactions. Therefore, the time to confirm a transaction is usually the cryptocurrency\'s ',html.Strong('block time'),
+                        '. When the miner mines a transaction, he also takes some currency for himself, which is the ',html.Strong('transaction fee'),'.',
+                        html.Br(),html.Br(),
+                        'When analyzing historical Bitcoin data, we can see that it has in fact been serving fast and cheap transactions, ',
+                        'at least when compared to traditional banks transfers, but not credit cards and other services such as PayPal, with ',
+                        'transactions being confirmed on average in 10 minutes. Fees are much lower, though, with the average historical fee ',
+                        'around only a single dollar. When compared to other cryptocurrencies, though, Bitcoin suffers, offering the most ',
+                        'expensive and slowest transactions of all the major cryptocurrencies. Also, when a boom in cryptocurrencies started ',
+                        'occuring in the end in 2017 fees went sky high to an average of 54 dollars, showing that the currency is also very volatile.',
+                        html.Br(),html.Br(),
+                        'You can explore those insights and compare cryptocurrencies\' historical behavior on this premise in our next visualization.'])
+        ])
+    ])
 
 slides.append(slide1)
 slides.append(slide2)
 slides.append(slide3)
 slides.append(slide4)
 slides.append(slide5)
-slides.append(slide95)
-slides.append(slide96)
+slides.append(slide6)
+slides.append(slide7)
+slides.append(slide8)
+slides.append(slide9)
+slides.append(slide10)
 
 ####################################################
 ### 				DASH LAYOUT					 ###
