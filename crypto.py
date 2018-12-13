@@ -24,6 +24,7 @@ import grasia_dash_components as gdc
 # Setup the Dash application
 #app = dash.Dash(__name__, external_stylesheets=external_stylesheets, static_folder='static')
 app = dash.Dash(__name__, static_folder='static')
+server = app.server
 
 
 ####################################################
