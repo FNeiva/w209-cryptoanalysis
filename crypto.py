@@ -145,62 +145,44 @@ def build_treemap(date, dataset, x, y, width, height):
 
     return figure
 
-decentralizedviz = html.Div([
-
-html.Div([
-    html.H2(children='Are Bitcoins Decentralized?'),
-], className='row'),
-
-
-
-html.Div([
-    html.Div([], className='two columns'),
-    html.Div([
-        html.Div([
-                dcc.Graph(
-                    id='cpm_treemap',
-                    figure=build_treemap(unix_time_millis(df_ct_per_month.index[-1]),
-                                         'count', tm_x, tm_y, tm_width, tm_height),
-                    config={
-                        'displayModeBar': False
-                    }
-                )
-        ]),
-    ], className='five columns'),
-    html.Div([
-        html.Div([
-            dcc.Graph(
-                id='vpm_treemap',
-                figure=build_treemap(unix_time_millis(df_val_per_month.index[-1]),
-                                     'values', tm_x, tm_y, tm_width, tm_height),
-                config={
-                    'displayModeBar': False
-                }
-            )
-        ], style = {'width': '100%', 'display': 'block'}),
-    ], className='five columns'),
-],className='row'),
-
-html.Div([
-    html.Div([], className='one columns'),
-    html.Div([
-        dcc.Slider(
-            id='date_slider',
-            min=unix_time_millis(df_ct_per_month.index.min()),
-            max=unix_time_millis(df_ct_per_month.index.max()),
-            value=unix_time_millis(df_ct_per_month.index.max()),
-            marks={int(unix_time_millis(d)): {'label': d.strftime('%B %Y'),
-                                              'style': {  'transform': 'rotate(-45deg) translate(-45px, -10px)',
-                                                        'text-align': 'right',
-                                                        'white-space': 'nowrap'}} for d in df_ct_per_month.index[0:len(df_ct_per_month):5]},
-            included=True,
-            updatemode='mouseup'
-        )
-    ], className='ten columns'),
-], className='row', style= {'width': '90%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center'}),
-
-
-])
+decentralizedviz = html.Div(className='wrap',children=[
+                        html.H2('Are Bitcoins Decentralized?'),
+                        html.Hr(),
+                        html.Div(className='grid',children=[
+                            html.Div(className='column',children=[
+                                dcc.Graph(
+                                    id='cpm_treemap',
+                                    figure=build_treemap(unix_time_millis(df_ct_per_month.index[-1]),
+                                                         'count', tm_x, tm_y, tm_width, tm_height),
+                                    config={
+                                        'displayModeBar': False
+                                    }
+                                )
+                            ]),
+                            html.Div(className='column',children=[
+                                dcc.Graph(
+                                    id='vpm_treemap',
+                                    figure=build_treemap(unix_time_millis(df_val_per_month.index[-1]),
+                                                         'values', tm_x, tm_y, tm_width, tm_height),
+                                    config={
+                                        'displayModeBar': False
+                                    }
+                                )
+                            ])
+                        ]),
+                        html.Div(dcc.Slider(
+                            id='date_slider',
+                            min=unix_time_millis(df_ct_per_month.index.min()),
+                            max=unix_time_millis(df_ct_per_month.index.max()),
+                            value=unix_time_millis(df_ct_per_month.index.max()),
+                            marks={int(unix_time_millis(d)): {'label': d.strftime('%B %Y'),
+                                                              'style': {  'transform': 'rotate(-45deg) translate(-45px, -10px)',
+                                                                        'text-align': 'right',
+                                                                        'white-space': 'nowrap'}} for d in df_ct_per_month.index[0:len(df_ct_per_month):5]},
+                            included=True,
+                            updatemode='mouseup'
+                        ))
+                    ])
 
 ####################################################
 ### 			STORE VALUE VIZ CODE			 ###
@@ -493,7 +475,7 @@ slide2 = html.Section([navbar,
 					html.H2('Instructions'),
 					html.P('How to use and navigate this website',className='text-subtitle'),
 					html.Hr(),
-					html.Div(className='grid vertical-align',children=[
+					html.Div(className='grid',children=[
 						html.Div(className='column',children=[
 							html.H3('Story Mode'),
 							html.P('To view the story, just keep scrolling! You can return to the beginning of the story by using the navigation bar above.')
@@ -512,7 +494,7 @@ slide2 = html.Section([navbar,
 
 slide3 = html.Section([navbar,
                         html.Div(className='wrap',children=[
-                            html.Div(className='card-50',children=[
+                            html.Div(className='card-20',children=[
                                 html.Div(className='flex-content',children=[
                                     html.H3('Introduction'),
                                     html.P(['Bitcoin is a ',html.Strong('cryptocurrency'),'''
@@ -541,7 +523,9 @@ slide3 = html.Section([navbar,
                                         ]))
                                     ])
                                 ]),
-                                html.Figure(html.Img(className='aligncenter',src='/static/bitcoin_pile.png',alt='Bitcoin'))
+                                html.Div(className='flex-content',children=[
+                                    html.Figure(html.Img(className='alignright size-75',src='/static/bitcoin_pile.png',alt='Bitcoin'))
+                                ])
                             ])
                         ])
                     ])
