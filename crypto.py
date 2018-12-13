@@ -491,25 +491,26 @@ slide3 = html.Section([navbar,
                                     , which is a form of electronic cash. It''s main differentiator is that is decentralized, meaning it does not
                                     have a bank or any other kind of administrator behind it, with transactions occuring directly between users
                                     in a peer-to-peer fashion and without intermediaries. It relies on miners to process the transactions, who
-                                    mine the distributed ledger called blockchain in exchange for bitcoins.
-
-                                    Bitcoin''s main premises, which we'll analyze here, are:
+                                    mine the distributed ledger called blockchain in exchange for bitcoins.''',html.Br(),html.Br(),
+                                    '''
+                                    Proponents of Bitcoin and other cryptocurrencies highlight their benefits over fiat currencies and other stores
+                                    of value across three key dimensions, which we analyze here:
                                     ''']),
                                     html.Ul(className='flexblock specs',children=[
                                         html.Li(html.Div([
                                             html.Img(src='/static/decentralized.svg'),
                                             html.H2('Decentralized'),
-                                            'Lorem ipsum'
+                                            'Not controlled by any particular entity, so not subject to manipulation'
                                         ])),
                                         html.Li(html.Div([
                                             html.Img(src='/static/storevalue.svg'),
                                             html.H2('Store of Value'),
-                                            'Lorem ipsum'
+                                            'Should work as a store of value (with proponents likening it to gold)'
                                         ])),
                                         html.Li(html.Div([
                                             html.Img(src='/static/transactions.svg'),
                                             html.H2('Fast and Cheap Transactions'),
-                                            'Lorem ipsum'
+                                            'Fast and affordable transactions, relying on the public blockchain'
                                         ]))
                                     ])
                                 ]),
@@ -540,25 +541,28 @@ slide4 = html.Section(className='bg-light',style={'background-color':'#edf2f7'},
 slide5 = html.Section([navbar,decentralizedviz])
 
 ## SLIDE 6: Store Value Story
-slide6 = html.Section(className='bg-apple',children=[navbar,
-            html.Div(className='wrap',children=[
-                html.Img(className='alignright size-40',src='/static/speedcost.svg'),
-                html.H2(html.Strong('Fast and Cheap Transactions. Really?')),
-                html.P(['One of the premises of Bitcoin is to perform transactions quickly and with small fees. But how do those work',
-                        ' in cryptocurrencies?',
-                        ' All transactions are stored in a transaction ledger, called ',html.Strong('blockchain'),'.',
-                        ' Cryptocurrency miners mine the blockchain for transactions, and when they do so they create new blocks confirming ',
-                        'those transactions. Therefore, the time to confirm a transaction is usually the cryptocurrency\'s ',html.Strong('block time'),
-                        '. When the miner mines a transaction, he also takes some currency for himself, which is the ',html.Strong('transaction fee'),'.',
+slide6 = html.Section(className='fullscreen bg-apple',children=[navbar,
+            html.Span(className='background dark',style={'background-image':'url("/static/valueback.jpg")'}),
+            html.Div(className='wrap aligncenter',children=[
+                html.H2(html.Strong('Are cryptocurrencies a good store of value?')),
+                html.P(['''A key premise of any currency is that they can store value over time. A good store of value gives you somewhat stable
+                           purchasing power. U.S. dollars and gold are widely adopted as currency and store of value largely because of that --
+                           the purchasing power of dollars or gold today are expected to be predictive of what they will be a day or a year from
+                           now.''',html.Br(),html.Br(),
+                        '''Despite their names, cryptos not only as currencies. They are also speculative assets, and some have utility --
+                           so comparisons to other assets with utility like stocks are not unreasonable.''',html.Br(),html.Br(),
+                        '''One way of measuring this dimension of “store of value” is looking at price volatility of cryptos. When we measure
+                           it this way, cryptos do not stack up very well.''',
+                           html.A('Using data from 2013 to June 2018',href='https://www.kaggle.com/jessevent/all-crypto-currencies'),
+                        ', we measured how volatile crypto prices are on a day-to-day basis -- comparing opening and closing prices.',
                         html.Br(),html.Br(),
-                        'When analyzing historical Bitcoin data, we can see that it has in fact been serving fast and cheap transactions, ',
-                        'at least when compared to traditional banks transfers, but not credit cards and other services such as PayPal, with ',
-                        'transactions being confirmed on average in 10 minutes. Fees are much lower, though, with the average historical fee ',
-                        'around only a single dollar. When compared to other cryptocurrencies, though, Bitcoin suffers, offering the most ',
-                        'expensive and slowest transactions of all the major cryptocurrencies. Also, when a boom in cryptocurrencies started ',
-                        'occuring in the end in 2017 fees went sky high to an average of 54 dollars, showing that the currency is also very volatile.',
-                        html.Br(),html.Br(),
-                        'You can explore those insights and compare cryptocurrencies\' historical behavior on this premise in our next visualization.'])
+                        '''Combining all the market cap of cryptos, the biggest up swing in prices in a day was 44.35% (November 2013), while
+                           the biggest downswing was -24.25% (Dec 2013). For a rough comparison, the biggest upswing for the Dow Jones Industrial
+                           Average was 15.34% (1933), while the biggest downswing was −22.61% (1987).''',html.Br(),html.Br(),
+                        '''For a more stark comparison, consider that the total value of crypto currencies went from $10B in May 2016 to $100B
+                           in June 2017 to $800B in January 2018. And it now back to just over $100B in December 2018.''',html.Br(),html.Br(),
+                        '''If we focus only on the top 10 largest currencies, their volatility in prices is noticeable, with Ripple having the
+                           highest daily upswing in prices of 178.8% (April 2017) and Ethereum having the biggest daily drop of 73% (April 15).'''])
         ])
     ])
 
