@@ -110,6 +110,16 @@ def build_treemap(date, dataset, x, y, width, height):
                 fillcolor=cList[counter]
             ),
         )
+        annotations.append(
+            dict(
+                x = r['x']+(r['dx']/2),
+                y = r['y']+(r['dy']/2),
+                text = '',
+                showarrow = False,
+
+            )
+        ),
+
 
         counter = counter + 1
         if counter >= len(cList):
@@ -120,14 +130,14 @@ def build_treemap(date, dataset, x, y, width, height):
             x=[r['x']+(r['dx']/2) for r in rects],
             y=[r['y']+(r['dy']/2) for r in rects],
             text=[v + '\n' + '{:.2f}'.format(values.get(v)) + '%' for v in values.keys()],
-            mode='text',
+            mode='none',
             hoverinfo='text',
             )
         ],
 
         'layout': go.Layout(
-            height=500,
-            width=500,
+            height=440,
+            width=420,
             xaxis={'showgrid': False,
                    'zeroline': False,
                    'showticklabels': False,
@@ -183,6 +193,7 @@ decentralizedviz = html.Div(className='wrap',children=[
                             updatemode='mouseup'
                         ))
                     ])
+
 
 ####################################################
 ### 			STORE VALUE VIZ CODE			 ###
