@@ -145,43 +145,6 @@ def build_treemap(date, dataset, x, y, width, height):
 
     return figure
 
-decentralizedStory = html.Div([
-
-html.Div([
-    html.H2(children='Are Bitcoins Decentralized?'),
-    dcc.Markdown('Analyzing transaction data from [January 2009 to september 2018](https://cloud.google.com/blog/products/gcp/bitcoin-in-bigquery-blockchain-analytics-on-public-data).')
-], className='row'),
-
-html.Div([
-    html.Div([
-    dcc.Markdown('''
-Bitcoins were supposed to be centralized, therefore not controlled by governments
-or companies. However, the early distribution was [concentrated on a few early
-adopters](https://blog.picks.co/bitcoins-distribution-was-fair-e2ef7bbbc892/)
-and nowadays specialist suspects that trader companies have the wealthier
-accounts.
-
-The problem can be even worse, because most of the wealthier users hold more
-than one account, improving his/her privacy at the same time that undermines the
-coin distribution transparency. For the 22 million unique wallets, the estimative
-is about roughly [5 million unique users](https://medium.com/@BambouClub/are-you-in-the-bitcoin-1-a-new-model-of-the-distribution-of-bitcoin-wealth-6adb0d4a6a95).
-
-The upcoming boxes show the distribution of the users and the overall amount of
-transactions over time. Use the slider in the bottom of the page to shift the
-time window and hover over the boxes to see the distribution.\n
-
-    '''),
-        ], className='eight columns', style= {}),
-
-    html.Div([
-        html.Div([
-            html.Img(id='wallet_count_viz', src='/assets/wallets_count.svg'),
-        ]),
-    ], className='four columns'),
-
-], className='row'),
-])
-
 decentralizedviz = html.Div([
 
 html.Div([
@@ -494,9 +457,9 @@ navbar = html.Header([
 				html.Ul([
 						html.Li([html.A('Home',href='#slide=1')]),
 						html.Li([html.A('Instructions',href='#slide-2')]),
-						html.Li([html.A('Story',href='')]),
-						html.Li([html.A('Store Value',href='')]),
+						html.Li([html.A('Story',href='#slide-3')]),
 						html.Li([html.A('Decentralization',href='')]),
+                        html.Li([html.A('Store Value',href='')]),
 						html.Li([html.A('Fast and Cheap',href='')])
 				],style={'margin':0})
 			])
@@ -524,7 +487,7 @@ slide1 = html.Section([
 				html.H6('Marcelo Queiroz')],
 		  className='bg-apple aligncenter')
 
-## SLIDE 2: Introduction Slide
+## SLIDE 2: Instructions Slide
 slide2 = html.Section([navbar,
 				html.Div(className='wrap',children=[
 					html.H2('Instructions'),
@@ -547,20 +510,75 @@ slide2 = html.Section([navbar,
 				])
 			])
 
-# SLIDE 2: Decentralized
-slide3 = html.Section([navbar,decentralizedviz])
+slide3 = html.Section([navbar,
+                        html.Div(className='wrap',children=[
+                            html.Div(className='card-50',children=[
+                                html.Div(className='flex-content',children=[
+                                    html.H3('Introduction'),
+                                    html.P(['Bitcoin is a ',html.Strong('cryptocurrency'),'''
+                                    , which is a form of electronic cash. It''s main differentiator is that is decentralized, meaning it does not
+                                    have a bank or any other kind of administrator behind it, with transactions occuring directly between users
+                                    in a peer-to-peer fashion and without intermediaries. It relies on miners to process the transactions, who
+                                    mine the distributed ledger called blockchain in exchange for bitcoins.
+
+                                    Bitcoin''s main premises, which we'll analyze here, are:
+                                    ''']),
+                                    html.Ul(className='flexblock specs',children=[
+                                        html.Li(html.Div([
+                                            html.Img(src='/static/decentralized.svg'),
+                                            html.H2('Decentralized'),
+                                            'Lorem ipsum'
+                                        ])),
+                                        html.Li(html.Div([
+                                            html.Img(src='/static/storevalue.svg'),
+                                            html.H2('Store of Value'),
+                                            'Lorem ipsum'
+                                        ])),
+                                        html.Li(html.Div([
+                                            html.Img(src='/static/transactions.svg'),
+                                            html.H2('Fast and Cheap Transactions'),
+                                            'Lorem ipsum'
+                                        ]))
+                                    ])
+                                ]),
+                                html.Figure(html.Img(className='aligncenter',src='/static/bitcoin_pile.png',alt='Bitcoin'))
+                            ])
+                        ])
+                    ])
+
+# SLIDE 4: Decentralization Story
+slide4 = html.Section(className='bg-light',style={'background-color':'#edf2f7'},children=[navbar,
+            html.Div(className='wrap',children=[
+                html.Img(className='alignleft size-50',src='/static/wallets_count.svg'),
+                html.H2(html.Strong('Are Bitcoins Decentralized?')),
+                html.P(['Analyzing transaction data from ',html.A('January 2009 to september 2018',href='https://cloud.google.com/blog/products/gcp/bitcoin-in-bigquery-blockchain-analytics-on-public-data'),'.',
+                            html.Br(),html.Br(),
+                            'Bitcoins were supposed to be centralized, therefore not controlled by governments or companies. However, the early distribution was ',
+                            html.A('concentrated on a few early adopters', href='https://blog.picks.co/bitcoins-distribution-was-fair-e2ef7bbbc892/'),
+                            ' and nowadays specialists suspect that trader companies have the wealthier accounts.',
+                            html.Br(),html.Br(),
+                            'The problem can be even worse, because most of the wealthier users hold more than one account, improving his/her privacy at the same time that undermines the coin distribution transparency. For the 22 million unique wallets, the estimative is about roughly ',
+                            html.A('5 million unique users',href='https://medium.com/@BambouClub/are-you-in-the-bitcoin-1-a-new-model-of-the-distribution-of-bitcoin-wealth-6adb0d4a6a95'),'.'])
+                ])
+            ])
+
+# SLIDE 5: Decentralized
+slide94 = html.Section([navbar,decentralizedviz])
 
 ## SLIDE 3: Store value
-slide4 = html.Section([navbar,storevalueviz])
+slide95 = html.Section([navbar,storevalueviz])
 
 ## SLIDE 4: Fast and cheap
-slide5 = html.Section([navbar,fastcheapviz])
+slide96 = html.Section([navbar,fastcheapviz])
 
 slides.append(slide1)
 slides.append(slide2)
 slides.append(slide3)
 slides.append(slide4)
-slides.append(slide5)
+# slides.append(slide5)
+slides.append(slide94)
+slides.append(slide95)
+slides.append(slide96)
 
 ####################################################
 ### 				DASH LAYOUT					 ###
@@ -621,7 +639,7 @@ def update_vpm_treemap(date):
 
 
 ################################
-## Fast and Cheap Callbacks
+## Fast and Cheap Callbacks   ##
 ################################
 
 @app.callback(
