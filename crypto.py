@@ -27,7 +27,7 @@ app = dash.Dash(__name__, static_folder='static')
 
 
 ####################################################
-### 		DESCENTRALIZED  CODE				 ###
+### 		DESCENTRALIZED VIZ CODE				 ###
 ####################################################
 
 tm_width = 100
@@ -145,7 +145,7 @@ def build_treemap(date, dataset, x, y, width, height):
 
     return figure
 
-descetralizedStory = html.Div([
+decentralizedStory = html.Div([
 
 html.Div([
     html.H2(children='Are Bitcoins Decentralized?'),
@@ -182,7 +182,7 @@ time window and hover over the boxes to see the distribution.\n
 ], className='row'),
 ])
 
-descetralizedviz = html.Div([
+decentralizedviz = html.Div([
 
 html.Div([
     html.H2(children='Are Bitcoins Decentralized?'),
@@ -547,16 +547,20 @@ slide2 = html.Section([navbar,
 				])
 			])
 
+# SLIDE 2: Decentralized
+slide3 = html.Section([navbar,decentralizedviz])
+
 ## SLIDE 3: Store value
-slide3 = html.Section([navbar,storevalueviz])
+slide4 = html.Section([navbar,storevalueviz])
 
 ## SLIDE 4: Fast and cheap
-slide4 = html.Section([navbar,fastcheapviz])
+slide5 = html.Section([navbar,fastcheapviz])
 
 slides.append(slide1)
 slides.append(slide2)
 slides.append(slide3)
 slides.append(slide4)
+slides.append(slide5)
 
 ####################################################
 ### 				DASH LAYOUT					 ###
