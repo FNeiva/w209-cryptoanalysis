@@ -48,24 +48,24 @@ app.layout = html.Div(children = [
         ),
     
     # graph 2
-    dcc.Graph(
-        id='summary',
-        config = {
-            'displaylogo': False},
-        figure={'data': 
-                [dict(type = 'scatter',
-                      x = df['name'],
-                      y = df['change%'],
-                      mode = 'markers',
-                      transforms = [dict(
-                          type = 'aggregate',
-                          groups = df['name'].unique(),
-                          aggregations = [dict(target = 'y', func = 'count', enabled = True),]
-                      )]
-                     )]
+    #dcc.Graph(
+        #id='summary',
+        #config = {
+            #'displaylogo': False},
+        #figure={'data': 
+                #[dict(type = 'scatter',
+                      #x = df['name'],
+                      #y = df['change%'],
+                      #mode = 'markers',
+                      #transforms = [dict(
+                      #    type = 'aggregate',
+                      #    groups = df['name'].unique(),
+                      #    aggregations = [dict(target = 'y', func = 'count', enabled = True),]
+                      #)]
+                     #)]
 
-               }
-        ),
+               #}
+        #),
 ])
 
 if __name__ == '__main__':
