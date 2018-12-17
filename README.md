@@ -5,7 +5,8 @@ Repository for W209 Final Project: Analysis of Cryptocurrencies
 - Felipe Campos
 - Marcelo Queiroz
 
-Demo hosted at https://w209crypto.herokuapp.com/
+Demo hosted at https://w209crypto.herokuapp.com/ \
+
 Demo video at: https://www.youtube.com/watch?v=qugDzNn-LFY&t=9s
 
 ## Tools
