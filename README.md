@@ -1,11 +1,12 @@
 # w209-cryptoanalysis
 Repository for W209 Final Project: Analysis of Cryptocurrencies
 
-- Arnobio Morelix \(
+- Arnobio Morelix
 - Felipe Campos
 - Marcelo Queiroz
 
 Demo hosted at https://w209crypto.herokuapp.com/
+Demo video at: https://www.youtube.com/watch?v=qugDzNn-LFY&t=9s
 
 ## Tools
 - Python Data Stack (Pandas, numpy, etc.)
@@ -20,4 +21,4 @@ Demo hosted at https://w209crypto.herokuapp.com/
 
 - Heroku (For server, direct link to github report)
 
-
+Contact us for details on how the data were scrapped for each of those tools.
