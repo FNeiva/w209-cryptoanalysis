@@ -1,11 +1,11 @@
 # w209-cryptoanalysis
 Repository for W209 Final Project: Analysis of Cryptocurrencies
 
-- Arnobio Morelix
-- Felipe Campos
-- Marcelo Queiroz
+- Arnobio Morelix https://github.com/arnobiomorelix
+- Felipe Campos https://github.com/FNeiva
+- Marcelo Queiroz https://github.com/MScatolin
 
-Demo hosted at https://w209crypto.herokuapp.com/ \
+Demo hosted at https://w209crypto.herokuapp.com/
 
 Demo video at: https://www.youtube.com/watch?v=qugDzNn-LFY&t=9s
 
